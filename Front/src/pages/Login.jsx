@@ -1,14 +1,21 @@
 import React, { useState } from "react";
+import { useNavigate } from "react-router-dom"; 
 import EntradaTexto from "../components/EntradaTexto";
 import { FaMoneyBillWave } from "react-icons/fa"; // Ícono de dinero
 
 const Login = () => {
   const [username, setUsername] = useState("");
   const [password, setPassword] = useState("");
-
+  const navigate = useNavigate();
+  
   const handleLogin = () => {
     console.log("Usuario:", username);
     console.log("Contraseña:", password);
+    if (username === "admin" && password === "admin") {
+      navigate("/home");
+    } else {
+      alert("Usuario o contraseña incorrectos");
+    }
   };
 
   return (
@@ -43,6 +50,12 @@ const Login = () => {
           className="w-full px-4 py-3 mt-4 font-semibold text-white bg-blue-600 rounded-lg hover:bg-blue-700 transition duration-200"
         >
           Iniciar Sesión
+        </button>
+        <button 
+          onClick={() => navigate("/register")}
+          className="w-full mt-3 text-blue-600 hover:underline"
+        >
+          Crear una cuenta
         </button>
       </div>
     </div>
