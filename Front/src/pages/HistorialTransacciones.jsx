@@ -1,8 +1,10 @@
 import React from "react";
 import { useNavigate } from "react-router-dom";
+import { useTheme } from "../Providers/ThemeProvider"; // Importa el hook del tema
 
 const HistorialTransacciones = () => {
   const navigate = useNavigate();
+  const { theme } = useTheme(); // Obtiene el tema actual
 
   const transacciones = [
     { id: 1, origen: "Jugador1", destino: "Jugador2", monto: 500, tipo: "Transferencia" },
@@ -12,13 +14,21 @@ const HistorialTransacciones = () => {
   ];
 
   return (
-    <div className="flex flex-col items-center justify-center min-h-screen bg-gray-100">
-      <h1 className="text-3xl font-bold text-gray-900 mb-6">📜 Historial de Transacciones</h1>
+    <div
+      className={`flex flex-col items-center justify-center min-h-screen ${
+        theme === "dark" ? "bg-gray-900 text-white" : "bg-gray-100 text-gray-900"
+      }`}
+    >
+      <h1 className="text-3xl font-bold mb-6">📜 Historial de Transacciones</h1>
 
-      <div className="w-[500px] p-6 bg-white shadow-2xl rounded-lg">
+      <div
+        className={`w-[500px] p-6 shadow-2xl rounded-lg ${
+          theme === "dark" ? "bg-gray-800 text-white" : "bg-white text-gray-900"
+        }`}
+      >
         <table className="w-full text-left border-collapse">
           <thead>
-            <tr className="bg-gray-200">
+            <tr className={`${theme === "dark" ? "bg-gray-700" : "bg-gray-200"}`}>
               <th className="p-2">#</th>
               <th className="p-2">Origen</th>
               <th className="p-2">Destino</th>
@@ -28,7 +38,7 @@ const HistorialTransacciones = () => {
           </thead>
           <tbody>
             {transacciones.map((t) => (
-              <tr key={t.id} className="border-t">
+              <tr key={t.id} className={`border-t ${theme === "dark" ? "border-gray-600" : "border-gray-300"}`}>
                 <td className="p-2">{t.id}</td>
                 <td className="p-2">{t.origen}</td>
                 <td className="p-2">{t.destino}</td>

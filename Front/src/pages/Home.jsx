@@ -2,10 +2,12 @@ import React, { useState } from "react";
 import { useNavigate } from "react-router-dom";
 import { FaDice, FaUsers, FaRandom } from "react-icons/fa";
 import EntradaTexto from "../components/EntradaTexto";
+import { useTheme } from "../Providers/ThemeProvider"; // Importamos el hook del tema
 
 const Home = () => {
   const navigate = useNavigate();
-  const [codigoSala, setCodigoSala] = useState(""); // Estado para el código de sala
+  const { theme } = useTheme(); // Obtener el tema actual
+  const [codigoSala, setCodigoSala] = useState(""); 
 
   const handleUnirseSala = () => {
     if (codigoSala.trim() === "") {
@@ -17,11 +19,19 @@ const Home = () => {
   };
 
   return (
-    <div className="flex flex-col items-center justify-center min-h-screen bg-gray-100">
-      <h1 className="text-4xl font-bold text-gray-900 mb-8">🎲 Monopoly Bank</h1>
+    <div
+      className={`flex flex-col items-center justify-center min-h-screen ${
+        theme === "dark" ? "bg-gray-900 text-white" : "bg-gray-100 text-gray-900"
+      }`}
+    >
+      <h1 className="text-4xl font-bold mb-8">🎲 Monopoly Bank</h1>
 
-      <div className="w-[400px] p-8 bg-white shadow-2xl rounded-lg space-y-4">
-        <button 
+      <div
+        className={`w-[400px] p-8 shadow-2xl rounded-lg space-y-4 ${
+          theme === "dark" ? "bg-gray-800 text-white" : "bg-white text-gray-900"
+        }`}
+      >
+        <button
           className="w-full flex items-center justify-center gap-3 px-4 py-3 font-semibold text-white bg-blue-600 rounded-lg hover:bg-blue-700 transition duration-200"
           onClick={() => navigate("/sala")}
         >
@@ -36,14 +46,14 @@ const Home = () => {
           onChange={(e) => setCodigoSala(e.target.value)}
         />
 
-        <button 
+        <button
           className="w-full flex items-center justify-center gap-3 px-4 py-3 font-semibold text-white bg-green-600 rounded-lg hover:bg-green-700 transition duration-200"
-          onClick={() => navigate("/sala")}
+          onClick={handleUnirseSala}
         >
           <FaUsers className="text-xl" /> Unirse a una Sala
         </button>
 
-        <button 
+        <button
           className="w-full flex items-center justify-center gap-3 px-4 py-3 font-semibold text-white bg-yellow-600 rounded-lg hover:bg-yellow-700 transition duration-200"
           onClick={() => navigate("/sala")}
         >

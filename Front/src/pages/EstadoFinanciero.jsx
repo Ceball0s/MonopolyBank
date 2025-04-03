@@ -1,5 +1,6 @@
 import React from "react";
 import { useNavigate } from "react-router-dom";
+import { useTheme } from "../Providers/ThemeProvider"; // Importa el hook del tema
 
 const jugadores = [
   { nombre: "Jugador 1", dinero: 1500 },
@@ -10,15 +11,29 @@ const jugadores = [
 
 const EstadoFinanciero = () => {
   const navigate = useNavigate();
+  const { theme } = useTheme(); // Obtiene el tema actual
 
   return (
-    <div className="flex flex-col items-center justify-center min-h-screen bg-gray-100">
-      <h1 className="text-3xl font-bold text-gray-900 mb-6">📊 Estado Financiero</h1>
+    <div
+      className={`flex flex-col items-center justify-center min-h-screen ${
+        theme === "dark" ? "bg-gray-900 text-white" : "bg-gray-100 text-gray-900"
+      }`}
+    >
+      <h1 className="text-3xl font-bold mb-6">📊 Estado Financiero</h1>
 
-      <div className="w-[400px] p-6 bg-white shadow-2xl rounded-lg">
+      <div
+        className={`w-[400px] p-6 shadow-2xl rounded-lg ${
+          theme === "dark" ? "bg-gray-800 text-white" : "bg-white text-gray-900"
+        }`}
+      >
         <ul className="space-y-4">
           {jugadores.map((jugador, index) => (
-            <li key={index} className="flex justify-between text-lg font-semibold text-gray-800">
+            <li
+              key={index}
+              className={`flex justify-between text-lg font-semibold ${
+                theme === "dark" ? "text-gray-300" : "text-gray-800"
+              }`}
+            >
               <span>{jugador.nombre}</span>
               <span>${jugador.dinero}</span>
             </li>
