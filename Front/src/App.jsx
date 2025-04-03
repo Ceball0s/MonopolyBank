@@ -17,7 +17,7 @@ function App() {
     <Router>
       <div
         className="flex flex-col min-h-screen bg-cover bg-center bg-no-repeat"
-        style={{ backgroundImage: "url('https://images.pexels.com/photos/1329644/pexels-photo-1329644.jpeg?auto=compress&cs=tinysrgb&w=1260&h=750&dpr=1')" }}
+        style={{ backgroundImage: "url('https://images3.alphacoders.com/652/thumb-1920-652712.jpg')" }}
       >
         <Routes>
           <Route path="/" element={<Login />} />
