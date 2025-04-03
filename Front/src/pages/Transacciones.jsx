@@ -6,9 +6,19 @@ const Transacciones = () => {
   const navigate = useNavigate();
   const { theme } = useTheme();
   const [monto, setMonto] = useState("");
+  const [tipoTransaccion, setTipoTransaccion] = useState("pago");
+  const [jugadorOrigen, setJugadorOrigen] = useState("");
+  const [jugadorDestino, setJugadorDestino] = useState("");
+
+  // Lista de jugadores (puedes reemplazar con datos dinámicos)
+  const jugadores = ["Alice", "Bob", "Carlos", "Diana"];
 
   const hacerTransaccion = () => {
-    alert("Transacción confirmada");
+    if (!jugadorOrigen || !jugadorDestino || monto <= 0) {
+      alert("Por favor, complete todos los campos correctamente.");
+      return;
+    }
+    alert(`Transacción confirmada: ${tipoTransaccion} de ${jugadorOrigen} a ${jugadorDestino} por $${monto}`);
     navigate("/banco");
   };
 
@@ -23,28 +33,41 @@ const Transacciones = () => {
         <h1 className="text-3xl font-bold text-center w-full">💰 Transacciones</h1>
 
         {/* Tipo de Transacción */}
-        <select className={`w-full p-3 rounded-lg text-lg font-medium outline-none
+        <select 
+          value={tipoTransaccion} 
+          onChange={(e) => setTipoTransaccion(e.target.value)}
+          className={`w-full p-3 rounded-lg text-lg font-medium outline-none
           ${theme === "dark" ? "bg-gray-700 text-white border-gray-600" : "bg-gray-200 text-gray-900 border-gray-300"}`}
         >
-          <option value="transferencia">Transferencia</option>
           <option value="pago">Pago</option>
+          <option value="cobro">Cobro</option>
         </select>
 
         {/* Jugador de Origen */}
-        <input
-          type="text"
-          placeholder="Jugador de Origen"
+        <select
+          value={jugadorOrigen}
+          onChange={(e) => setJugadorOrigen(e.target.value)}
           className={`w-full p-3 rounded-lg text-lg font-medium outline-none
           ${theme === "dark" ? "bg-gray-700 text-white border-gray-600" : "bg-gray-200 text-gray-900 border-gray-300"}`}
-        />
+        >
+          <option value="">Seleccione un jugador de origen</option>
+          {jugadores.map((jugador) => (
+            <option key={jugador} value={jugador}>{jugador}</option>
+          ))}
+        </select>
 
         {/* Jugador de Destino */}
-        <input
-          type="text"
-          placeholder="Jugador de Destino"
+        <select
+          value={jugadorDestino}
+          onChange={(e) => setJugadorDestino(e.target.value)}
           className={`w-full p-3 rounded-lg text-lg font-medium outline-none
           ${theme === "dark" ? "bg-gray-700 text-white border-gray-600" : "bg-gray-200 text-gray-900 border-gray-300"}`}
-        />
+        >
+          <option value="">Seleccione un jugador de destino</option>
+          {jugadores.map((jugador) => (
+            <option key={jugador} value={jugador}>{jugador}</option>
+          ))}
+        </select>
 
         {/* Monto */}
         <input

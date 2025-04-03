@@ -1,11 +1,14 @@
-import React from "react";
+import React, { useState } from "react";
 import { useNavigate } from "react-router-dom";
 import { useTheme } from "../Providers/ThemeProvider";
 
-const Banco = () => {
+const Banco = ( ) => {
   const navigate = useNavigate();
   const { theme } = useTheme();
+  const [dineroActual, setDineroActual] = useState(5000);
 
+  const [turnoActual, setTurnoActual] = useState("Alice");
+  
   return (
     <div className="flex items-center justify-center min-h-screen">
       <div 
@@ -15,6 +18,12 @@ const Banco = () => {
       >
         {/* Título */}
         <h1 className="text-4xl font-bold text-center mb-6 w-full">🏦 Banco</h1>
+
+        {/* Información del jugador */}
+        <div className="mb-4 text-center">
+          <p className="text-xl font-semibold">Turno actual: <span className="text-blue-500">{turnoActual}</span></p>
+          <p className="text-xl font-semibold">Dinero disponible: <span className="text-green-500">${dineroActual}</span></p>
+        </div>
 
         {/* Botón para Transacciones */}
         <button

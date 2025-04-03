@@ -36,14 +36,14 @@ const Register = () => {
           <EntradaTexto
             label="Usuario"
             placeholder="Elige un usuario"
-            value={correo}
+            value={username}
             onChange={(e) => setUsername(e.target.value)}
             className="w-full"
           />
           <EntradaTexto
             label="Correo"
             placeholder="Digite su correo"
-            value={username}
+            value={correo}
             onChange={(e) => setcorreo(e.target.value)}
             className="w-full"
           />

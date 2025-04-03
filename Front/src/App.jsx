@@ -24,7 +24,7 @@ function App() {
           <Route path="/login" element={<Login />} />
           <Route path="/register" element={<Register />} />
           <Route path="/home" element={<Home />} />
-          <Route path="/sala" element={<Sala />} />
+          <Route path="/sala/:codigoSala" element={<Sala />} />
           <Route path="/banco" element={<Banco />} />
           <Route path="/transacciones" element={<Transacciones />} />
           <Route path="/historial" element={<HistorialTransacciones />} />
