@@ -7,6 +7,7 @@ import { useTheme } from "../Providers/ThemeProvider";
 const Register = () => {
   const { theme } = useTheme();
   const [username, setUsername] = useState("");
+  const [correo, setcorreo] = useState("");
   const [password, setPassword] = useState("");
   const navigate = useNavigate();
 
@@ -35,8 +36,15 @@ const Register = () => {
           <EntradaTexto
             label="Usuario"
             placeholder="Elige un usuario"
-            value={username}
+            value={correo}
             onChange={(e) => setUsername(e.target.value)}
+            className="w-full"
+          />
+          <EntradaTexto
+            label="Correo"
+            placeholder="Digite su correo"
+            value={username}
+            onChange={(e) => setcorreo(e.target.value)}
             className="w-full"
           />
 
