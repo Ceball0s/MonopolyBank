@@ -1,6 +1,6 @@
 import React from "react";
 import { useNavigate } from "react-router-dom";
-import { useTheme } from "../Providers/ThemeProvider"; // Importa el hook del tema
+import { useTheme } from "../Providers/ThemeProvider";
 
 const jugadores = [
   { nombre: "Jugador 1", dinero: 1500 },
@@ -11,40 +11,38 @@ const jugadores = [
 
 const EstadoFinanciero = () => {
   const navigate = useNavigate();
-  const { theme } = useTheme(); // Obtiene el tema actual
+  const { theme } = useTheme();
 
   return (
-    <div
-      className={`flex flex-col items-center justify-center min-h-screen ${
-        theme === "dark" ? "bg-gray-900 text-white" : "bg-gray-100 text-gray-900"
-      }`}
-    >
-      <h1 className="text-3xl font-bold mb-6">📊 Estado Financiero</h1>
-
+    <div className="flex items-center justify-center min-h-screen">
       <div
-        className={`w-[400px] p-6 shadow-2xl rounded-lg ${
-          theme === "dark" ? "bg-gray-800 text-white" : "bg-white text-gray-900"
-        }`}
+        className={`w-full max-w-md p-8 shadow-2xl rounded-lg bg-opacity-95
+        ${theme === "dark" ? "bg-gray-800 text-white" : "bg-white text-gray-900"}
+        flex flex-col items-center h-auto space-y-4`}
       >
-        <ul className="space-y-4">
+        {/* Título */}
+        <h1 className="text-3xl font-bold text-center w-full">📊 Estado Financiero</h1>
+
+        {/* Lista de jugadores */}
+        <ul className="w-full space-y-4">
           {jugadores.map((jugador, index) => (
             <li
               key={index}
-              className={`flex justify-between text-lg font-semibold ${
-                theme === "dark" ? "text-gray-300" : "text-gray-800"
-              }`}
+              className={`flex justify-between text-lg font-semibold p-3 rounded-lg
+              ${theme === "dark" ? "bg-gray-700 text-gray-300" : "bg-gray-100 text-gray-800"}`}
             >
               <span>{jugador.nombre}</span>
-              <span>${jugador.dinero}</span>
+              <span className="font-bold">${jugador.dinero}</span>
             </li>
           ))}
         </ul>
 
+        {/* Botón de volver */}
         <button
           onClick={() => navigate("/banco")}
-          className="w-full mt-6 px-4 py-3 font-semibold text-white bg-red-600 rounded-lg hover:bg-red-700"
+          className="w-full px-4 py-3 font-semibold text-white bg-red-600 rounded-lg hover:bg-red-700 transition duration-200"
         >
-          Volver
+          🔙 Volver
         </button>
       </div>
     </div>
