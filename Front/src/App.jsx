@@ -8,6 +8,7 @@ import Transacciones from "./pages/Transacciones";
 import HistorialTransacciones from "./pages/HistorialTransacciones";
 import EstadoFinanciero from "./pages/EstadoFinanciero";
 import BotonFlotante from "./components/BotonFlotante";
+import { Error404, SalaError} from "./pages/Errors";
 import { useTheme } from "./Providers/ThemeProvider";
 import "./App.css";
 function App() {
@@ -29,6 +30,9 @@ function App() {
           <Route path="/transacciones" element={<Transacciones />} />
           <Route path="/historial" element={<HistorialTransacciones />} />
           <Route path="/estado-financiero" element={<EstadoFinanciero />} />
+          <Route path="/error404" element={<Error404 />} />
+          <Route path="/sala_no_disponible" element={<SalaError />} />
+
         </Routes>
       
         {/* Botón flotante para ir a la sala */}
