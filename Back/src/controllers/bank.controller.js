@@ -27,24 +27,4 @@ const transferMoney = async (req, res) => {
     }
 };
 
-const payRent = async (req, res) => {
-    try {
-        const { amount, gameId } = req.body;
-        const player = await Player.findById(req.player.id);
-        
-        if (!player) return res.status(404).json({ error: 'Jugador no encontrado' });
-        if (player.balance < amount) return res.status(400).json({ error: 'Saldo insuficiente' });
-        
-        player.balance -= amount;
-        await player.save();
-        
-        const transaction = new Transaction({ from: player._id, amount, type: 'bank', description: 'Pago de renta', game: gameId });
-        await transaction.save();
-        
-        res.json({ message: 'Pago de renta realizado', transaction });
-    } catch (err) {
-        res.status(400).json({ error: err.message });
-    }
-};
-
 module.exports = { transferMoney, payRent };
