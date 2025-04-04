@@ -3,6 +3,7 @@ import { useNavigate } from "react-router-dom";
 import EntradaTexto from "../components/EntradaTexto";
 import { FaUserPlus } from "react-icons/fa"; 
 import { useTheme } from "../Providers/ThemeProvider";
+import { registerRequest } from "../api/authApi";
 
 const Register = () => {
   const { theme } = useTheme();
@@ -11,9 +12,14 @@ const Register = () => {
   const [password, setPassword] = useState("");
   const navigate = useNavigate();
 
-  const handleRegister = () => {
-    alert("Cuenta creada. Redirigiendo a login...");
-    navigate("/login");
+  const handleRegister = async () => {
+    try {
+      await registerRequest(username, correo, password);
+      alert("Cuenta creada. Redirigiendo a login...");
+      navigate("/login");
+    } catch (error) {
+      alert(error.message); // Muestra el error si el registro falla
+    } 
   };
 
   return (
