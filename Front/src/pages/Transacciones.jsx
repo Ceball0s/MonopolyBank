@@ -11,7 +11,7 @@ const Transacciones = () => {
   const [jugadorDestino, setJugadorDestino] = useState("");
 
   // Lista de jugadores (puedes reemplazar con datos dinámicos)
-  const jugadores = ["Alice", "Bob", "Carlos", "Diana"];
+  const jugadores = ["Alice", "Bob", "Carlos", "Diana", "Banco"];
 
   const hacerTransaccion = () => {
     if (!jugadorOrigen || !jugadorDestino || monto <= 0) {
@@ -64,7 +64,8 @@ const Transacciones = () => {
           ${theme === "dark" ? "bg-gray-700 text-white border-gray-600" : "bg-gray-200 text-gray-900 border-gray-300"}`}
         >
           <option value="">Seleccione un jugador de destino</option>
-          {jugadores.map((jugador) => (
+          {jugadores.filter(jugador => jugador !== jugadorOrigen || jugador === "Banco") // excluir el jugador de origen  
+          .map((jugador) => (
             <option key={jugador} value={jugador}>{jugador}</option>
           ))}
         </select>
