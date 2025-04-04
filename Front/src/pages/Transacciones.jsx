@@ -39,6 +39,7 @@ const Transacciones = () => {
           className={`w-full p-3 rounded-lg text-lg font-medium outline-none
           ${theme === "dark" ? "bg-gray-700 text-white border-gray-600" : "bg-gray-200 text-gray-900 border-gray-300"}`}
         >
+          <option value=""disabled hidden>Seleccione el tipo de transacción</option>
           <option value="pago">Pago</option>
           <option value="cobro">Cobro</option>
         </select>
@@ -50,7 +51,7 @@ const Transacciones = () => {
           className={`w-full p-3 rounded-lg text-lg font-medium outline-none
           ${theme === "dark" ? "bg-gray-700 text-white border-gray-600" : "bg-gray-200 text-gray-900 border-gray-300"}`}
         >
-          <option value="">Seleccione un jugador de origen</option>
+          <option value=""disabled hidden>Seleccione un jugador de origen</option>
           {jugadores.map((jugador) => (
             <option key={jugador} value={jugador}>{jugador}</option>
           ))}
@@ -63,7 +64,7 @@ const Transacciones = () => {
           className={`w-full p-3 rounded-lg text-lg font-medium outline-none
           ${theme === "dark" ? "bg-gray-700 text-white border-gray-600" : "bg-gray-200 text-gray-900 border-gray-300"}`}
         >
-          <option value="">Seleccione un jugador de destino</option>
+          <option value=""disabled hidden>Seleccione un jugador de destino</option>
           {jugadores.filter(jugador => jugador !== jugadorOrigen || jugador === "Banco") // excluir el jugador de origen  
           .map((jugador) => (
             <option key={jugador} value={jugador}>{jugador}</option>
