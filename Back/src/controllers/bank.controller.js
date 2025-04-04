@@ -26,5 +26,26 @@ const transferMoney = async (req, res) => {
         res.status(400).json({ error: err.message });
     }
 };
+const getTransactionHistory = async (req, res) => {
+    try {
+        const transactions = await Transaction.find()
+            .populate('from', 'name')
+            .populate('to', 'name')
+            .sort({ createdAt: 1 }); // orden cronológico
 
-module.exports = { transferMoney, payRent };
+        const formatted = transactions.map((tx, index) => ({
+            turno: tx.turn || index + 1, // Si no hay turn, usa el orden
+            de: tx.from?.name || 'Banco',
+            a: tx.to?.name || 'Banco',
+            cantidad: tx.amount,
+            tipo: tx.type,
+            fecha: tx.createdAt
+        }));
+
+        res.json({ historial: formatted });
+    } catch (err) {
+        res.status(500).json({ error: 'Error al obtener el historial de transacciones' });
+    }
+};
+
+module.exports = { transferMoney, getTransactionHistory };

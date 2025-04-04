@@ -7,8 +7,9 @@ const TransactionSchema = new mongoose.Schema({
     type: { type: String, enum: ['bank', 'player'], required: true },
     description: { type: String, required: true },
     game: { type: mongoose.Schema.Types.ObjectId, ref: 'Game', required: true },
-    date: { type: Date, default: Date.now }
-
+    date: { type: Date, default: Date.now },
+    turn: Number, // Para almacenar el turno
+    createdAt: { type: Date, default: Date.now }
 });
 
 module.exports = mongoose.model('Transaction', TransactionSchema);
