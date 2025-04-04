@@ -33,4 +33,19 @@ const login = async (req, res) => {
     }
 };
 
-module.exports = { register, login };
+const getMe = async (req, res) => {
+    try {
+        const player = await Player.findById(req.player.id).select("-password"); // Excluye la contraseña
+        if (!player) {
+            return res.status(404).json({ error: "Usuario no encontrado" });
+        }
+        res.json(player); // Devuelve el usuario completo (id, name, email)
+    } catch (error) {
+        res.status(500).json({ error: "Error al obtener usuario" });
+    }
+
+};
+
+module.exports = { register, login, getMe };
+
+//module.exports = { register, login };

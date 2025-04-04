@@ -1,10 +1,13 @@
-import React, { useState } from "react";
+import React, { useState,useContext } from "react";
 import { useNavigate } from "react-router-dom";
 import { FaDice, FaUsers, FaSignOutAlt } from "react-icons/fa";
 import EntradaTexto from "../components/EntradaTexto";
 import { useTheme } from "../Providers/ThemeProvider";
+import { AuthContext } from "../context/AuthContext";
+
 
 const Home = () => {
+  const { logout } = useContext(AuthContext);
   const navigate = useNavigate();
   const { theme } = useTheme();
   const [codigoSala, setCodigoSala] = useState("");
@@ -25,6 +28,11 @@ const Home = () => {
     } else {
       navigate(`/sala/${codigoSala}`); // Unirse a la sala
     }
+  };
+
+  const handleLogout = () => {
+    logout();
+    navigate("/login");
   };
 
   return (
@@ -64,7 +72,7 @@ const Home = () => {
           {/* Botón para cerrar sesión */}
           <button
             className="w-full flex items-center justify-center gap-3 px-4 py-3 font-semibold text-white bg-red-600 rounded-lg hover:bg-yellow-700 transition duration-200"
-            onClick={() => navigate("/")}
+            onClick={handleLogout}
           >
             <FaSignOutAlt className="text-xl" /> Cerrar Sesión
           </button>

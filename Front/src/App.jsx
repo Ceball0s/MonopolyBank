@@ -10,6 +10,7 @@ import EstadoFinanciero from "./pages/EstadoFinanciero";
 import BotonFlotante from "./components/BotonFlotante";
 import { Error404, SalaError} from "./pages/Errors";
 import { useTheme } from "./Providers/ThemeProvider";
+import ProtectedRoute from "./components/ProtectedRoute";
 import "./App.css";
 function App() {
   const { toggleTheme } = useTheme();
@@ -21,10 +22,13 @@ function App() {
         style={{ backgroundImage: "url('https://images3.alphacoders.com/652/thumb-1920-652712.jpg')" }}
       >
         <Routes>
-          <Route path="/" element={<Login />} />
+          <Route path="/" element={
+              <ProtectedRoute>
+                <Home />
+              </ProtectedRoute>
+            } />
           <Route path="/login" element={<Login />} />
           <Route path="/register" element={<Register />} />
-          <Route path="/home" element={<Home />} />
           <Route path="/sala/:codigoSala" element={<Sala />} />
           <Route path="/banco" element={<Banco />} />
           <Route path="/transacciones" element={<Transacciones />} />

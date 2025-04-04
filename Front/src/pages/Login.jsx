@@ -1,22 +1,31 @@
-import React, { useState } from "react";
+import React, { useState, useContext } from "react";
 import { useNavigate } from "react-router-dom";
 import EntradaTexto from "../components/EntradaTexto";
 import { FaMoneyBillWave } from "react-icons/fa"; 
 import { useTheme } from "../Providers/ThemeProvider";
+import { AuthContext } from "../context/AuthContext";
+
 
 const Login = () => {
+  const { login } = useContext(AuthContext);
   const { theme } = useTheme();
-  const [username, setUsername] = useState("");
+  const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const navigate = useNavigate();
 
-  const handleLogin = () => {
-    if (username === "admin" && password === "admin") {
-      navigate("/home");
-    } else {
-      alert("Usuario o contraseña incorrectos");
+  const handleLogin = async () => {
+    if (email === "" || password === "") {
+      alert("debe llenar los campos");
+      return 
+    } 
+    try {
+      await login(email, password); // ✅ Aquí debería ejecutarse bien
+      navigate("/"); // 🔥 Redirige si todo sale bien
+    } catch (error) {
+      alert(error);
     }
   };
+
 
   return (
     <div className="flex items-center justify-center min-h-screen">
@@ -38,8 +47,8 @@ const Login = () => {
           <EntradaTexto
             label="Usuario"
             placeholder="Ingrese su usuario"
-            value={username}
-            onChange={(e) => setUsername(e.target.value)}
+            value={email}
+            onChange={(e) => setEmail(e.target.value)}
             className="w-full"
           />
 
