@@ -1,5 +1,6 @@
 const Player = require('../models/Player');
 const Transaction = require('../models/Transaction');
+const Game = require('../models/Game');
 
 const transferMoney = async (req, res) => {
     try {
@@ -48,4 +49,24 @@ const getTransactionHistory = async (req, res) => {
     }
 };
 
-module.exports = { transferMoney, getTransactionHistory };
+const getBalancesByGame = async (req, res) => {
+    try {
+        const { code } = req.params;
+
+        const game = await Game.findOne({ code }).populate('players');
+        if (!game) {
+            return res.status(404).json({ error: 'Partida no encontrada' });
+        }
+
+        const balances = game.players.map(player => ({
+            id: player._id,
+            name: player.name,
+            balance: player.balance
+        }));
+
+        res.json({ code: game.code, balances });
+    } catch (err) {
+        res.status(400).json({ error: err.message });
+    }
+};
+module.exports = { transferMoney, getTransactionHistory, getBalancesByGame };
