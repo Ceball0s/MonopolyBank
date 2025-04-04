@@ -7,10 +7,10 @@ const HistorialTransacciones = () => {
   const { theme } = useTheme();
 
   const transacciones = [
-    { id: 1, origen: "Jugador1", destino: "Jugador2", monto: 500, tipo: "+" },
-    { id: 2, origen: "Banco", destino: "Jugador3", monto: 1000, tipo: "-" },
-    { id: 3, origen: "Jugador4", destino: "Jugador1", monto: 300, tipo: "-" },
-    { id: 4, origen: "Jugador2", destino: "Banco", monto: 150, tipo: "+" },
+    { id: 1, origen: "Alice", destino: "Carlos", monto: 500, tipo: "+" },
+    { id: 2, origen: "Diana", destino: "Bob", monto: 1000, tipo: "-" },
+    { id: 3, origen: "Banco", destino: "Carlos", monto: 300, tipo: "-" },
+    { id: 4, origen: "Alice", destino: "Banco", monto: 150, tipo: "+" },
   ];
 
   return (

@@ -15,10 +15,10 @@ const Sala = () => {
   }, [codigoSala]);
 
   const [usuarios, setUsuarios] = useState([
-    { id: 1, nombre: "Jugador1" },
-    { id: 2, nombre: "Jugador2" },
-    { id: 3, nombre: "Jugador3" },
-    { id: 4, nombre: "Jugador4" },
+    { id: 1, nombre: "Alice" },
+    { id: 2, nombre: "Bob" },
+    { id: 3, nombre: "Carlos" },
+    { id: 4, nombre: "Diana" },
   ]);
 
   const iniciarJuego = () => {

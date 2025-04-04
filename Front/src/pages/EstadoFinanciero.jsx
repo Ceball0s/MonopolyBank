@@ -3,10 +3,10 @@ import { useNavigate } from "react-router-dom";
 import { useTheme } from "../Providers/ThemeProvider";
 
 const jugadores = [
-  { nombre: "Jugador 1", dinero: 1500 },
-  { nombre: "Jugador 2", dinero: 1200 },
-  { nombre: "Jugador 3", dinero: 1800 },
-  { nombre: "Jugador 4", dinero: 1400 },
+  { nombre: "Alice", dinero: 1500 },
+  { nombre: "Bob", dinero: 1200 },
+  { nombre: "Carlos", dinero: 1800 },
+  { nombre: "Diana", dinero: 1400 },
 ];
 
 const EstadoFinanciero = () => {
