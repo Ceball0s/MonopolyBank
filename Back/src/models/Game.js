@@ -1,7 +1,7 @@
 const mongoose = require('mongoose');
 
 const GameSchema = new mongoose.Schema({
-    name: { type: String, required: true },
+    name: { type: String },
     players: [{ type: mongoose.Schema.Types.ObjectId, ref: 'Player' }],
     started: { type: Boolean, default: false },
     code: { type: String, unique: true, required: true },
