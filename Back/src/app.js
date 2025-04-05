@@ -9,6 +9,7 @@ const { Server } = require('socket.io');
 const authRoutes = require('./routes/auth.routes');
 const gameRoutes = require('./routes/game.routes');
 const bankRoutes = require('./routes/bank.routes');
+const historyRoutes = require('./routes/history.routes');
 
 const app = express();
 const server = createServer(app);
@@ -33,7 +34,7 @@ mongoose.connect(process.env.MONGO_URI, {
 app.use('/api/auth', authRoutes);
 app.use('/api/game', gameRoutes);
 app.use('/api/bank', bankRoutes);
-
+app.use('/api/history', historyRoutes);
 // Configuración de Socket.io
 io.on('connection', (socket) => {
     console.log('🔗 Usuario conectado:', socket.id);
