@@ -1,15 +1,14 @@
+// models/Transaction.js
 const mongoose = require('mongoose');
 
-const TransactionSchema = new mongoose.Schema({
-    from: { type: mongoose.Schema.Types.ObjectId, ref: 'Player', required: true },
-    to: { type: mongoose.Schema.Types.ObjectId, ref: 'Player', required: false },
-    amount: { type: Number, required: true },
-    type: { type: String, enum: ['bank', 'player'], required: true },
-    description: { type: String, required: true },
-    game: { type: mongoose.Schema.Types.ObjectId, ref: 'Game', required: true },
-    date: { type: Date, default: Date.now },
-    turn: Number, // Para almacenar el turno
-    createdAt: { type: Date, default: Date.now }
+const transactionSchema = new mongoose.Schema({
+  from: { type: mongoose.Schema.Types.ObjectId, ref: 'Player' },
+  to: { type: mongoose.Schema.Types.ObjectId, ref: 'Player' },
+  amount: Number,
+  type: { type: String, enum: ['transfer', 'reward', 'fine'], default: 'transfer' },
+  gameId: { type: mongoose.Schema.Types.ObjectId, ref: 'Game' },
+  turnNumber: Number,
+  createdAt: { type: Date, default: Date.now }
 });
 
-module.exports = mongoose.model('Transaction', TransactionSchema);
+module.exports = mongoose.model('Transaction', transactionSchema);
