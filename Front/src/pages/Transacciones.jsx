@@ -64,9 +64,7 @@ const Transacciones = () => {
           ${theme === "dark" ? "bg-gray-700 text-white border-gray-600" : "bg-gray-200 text-gray-900 border-gray-300"}`}
         >
           <option value="" disabled hidden>Seleccione un jugador de origen</option>
-          {jugadores.map((jugador) => (
-            <option key={jugador.id} value={jugador.id}>{jugador.name}</option>
-          ))}
+          <option key={jugadorActual.id} value={jugadorActual.id}>{jugadorActual.name}</option>
           {/* <option value="Banco">Banco</option> */}
         </select>
 

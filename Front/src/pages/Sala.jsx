@@ -3,7 +3,7 @@ import { useNavigate, useParams } from "react-router-dom";
 import { useTheme } from "../Providers/ThemeProvider";
 import ListaUsuarios from "../components/ListaUsuarios";
 import { AuthContext } from "../context/AuthContext";
-import { getGameByCode, startGame } from "../api/gameApi";
+import { getGameByCode, startGame, salirDeLaPartida } from "../api/gameApi";
 
 
 const Sala = () => {
@@ -68,6 +68,14 @@ const Sala = () => {
 
   const salirDeSala = () => {
     localStorage.setItem("admin", "false");
+    salirDeLaPartida({ code: codigoSala, token })
+    .then(data => {
+      // Aquí puedes redirigir o mostrar un mensaje al usuario
+      alert(data.message);
+    })
+    .catch(err => {
+      alert("No se pudo salir: " + err.message);
+    });
     navigate("/");
   };
 

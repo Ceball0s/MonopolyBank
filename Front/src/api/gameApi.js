@@ -50,6 +50,33 @@ export const joinGame = async (token, code) => {
   }
 };
 
+export const salirDeLaPartida = async ({ code, token }) => {
+  try {
+    const response = await fetch(`${API_URL}/api/game/leave`, {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json',
+        'Authorization': `Bearer ${token}`
+      },
+      body: JSON.stringify({ code })
+    });
+
+    const data = await response.json();
+
+    if (!response.ok) {
+      throw new Error(data.error || 'Error al salir de la partida');
+    }
+
+    console.log('✅ Saliste de la partida:', data);
+    return data;
+
+  } catch (error) {
+    console.error('❌ Error al salir de la partida:', error.message);
+    throw error;
+  }
+}
+
+
 export const getGameById = async (id, token) => {
   try {
     const response = await fetch(`${API_URL}/api/game/${id}`, {

@@ -5,18 +5,29 @@ import EntradaTexto from "../components/EntradaTexto";
 import { useTheme } from "../Providers/ThemeProvider";
 import { AuthContext } from "../context/AuthContext";
 import { joinGame } from "../api/gameApi";
+import { createGame } from "../api/gameApi";
 
 const Home = () => {
-  const { logout, user } = useContext(AuthContext);
+  const { logout, user, token } = useContext(AuthContext);
   const navigate = useNavigate();
   const { theme } = useTheme();
   const [codigoSala, setCodigoSala] = useState("");
 
-  const handleCrearSala = () => {
-    localStorage.setItem("admin", "true");
-    navigate("/crear-sala");
-  };
+  // const handleCrearSala = () => {
+  //   localStorage.setItem("admin", "true");
+  //   navigate("/crear-sala");
+  // };
 
+  const handleCrearSala = async () => {    
+    try {
+      const data = await createGame(token, "", 8);
+      localStorage.setItem("admin", data.code); // Opcional
+      console.log("Sala creada:", data);
+      navigate(`/sala/${data.game.code}`);
+    } catch (error) {
+      alert(`Error al crear la sala: ${error.message}`);
+    }
+  };
   const handleUnirseSala = async () => {
     if (codigoSala.trim() === "") {
       alert("Por favor, ingrese un código de sala válido.");
@@ -29,7 +40,7 @@ const Home = () => {
       const currentPlayerId = localStorage.getItem("playerId");
       const soyAdmin = response.game.admin === currentPlayerId;
 
-      localStorage.setItem("admin", soyAdmin ? "true" : "false");
+      localStorage.setItem("admin", "false");
       alert("¡Unido a la sala exitosamente!");
       navigate(`/sala/${response.game.code}`);
     } catch (error) {

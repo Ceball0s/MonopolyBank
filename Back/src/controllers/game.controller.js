@@ -71,6 +71,37 @@ const joinGame = async (req, res) => {
   }
 };
 
+const leaveGame = async (req, res) => {
+  try {
+    const { code } = req.body;
+    const player = await Player.findById(req.player.id);
+    if (!player) return res.status(404).json({ error: 'Jugador no encontrado' });
+
+    const game = await Game.findOne({ code, status: 'waiting' });
+    if (!game) return res.status(404).json({ error: 'Partida no encontrada o ya en progreso' });
+
+    // Verifica si el jugador está en la partida
+    const index = game.players.findIndex(p => p.toString() === player._id.toString());
+    if (index === -1) {
+      return res.status(400).json({ error: 'El jugador no está en esta partida' });
+    }
+
+    // Elimina al jugador del array
+    game.players.splice(index, 1);
+    await game.save();
+
+    // Emitir evento al resto de jugadores
+    const io = req.app.get("io");
+    io.to(game._id.toString()).emit('playerLeft', { player: player.name });
+
+    res.json({ message: 'Saliste de la partida', game });
+
+  } catch (err) {
+    res.status(400).json({ error: err.message });
+  }
+};
+
+
 const listGames = async (req, res) => {
     try {
         const games = await Game.find().populate('players', 'name');
@@ -98,20 +129,24 @@ const getGameById = async (req, res) => {
 const getGameByCode = async (req, res) => {
   try {
     const { code } = req.params;
+    const playerId = req.player.id;
 
-    const game = await Game.findOne({ code }).populate('players', 'name');
+    const game = await Game.findOne({ code }).populate('players');
 
-    if (!game) {
-      return res.status(404).json({ message: 'Juego no encontrado' });
+    if (!game) return res.status(404).json({ error: 'Juego no encontrado' });
+
+    const isInGame = game.players.some(p => p._id.toString() === playerId.toString());
+    if (!isInGame) {
+      return res.status(403).json({ error: 'No tienes acceso a esta partida' });
     }
 
     res.json(game);
-  } catch (err) {
-    res.status(400).json({ error: err.message });
+
+  } catch (error) {
+    res.status(500).json({ error: 'Error al obtener el juego' });
   }
 };
 
-  
 const registerTurn = async (req, res) => {
   try {
     const { gameId, action } = req.body;
@@ -152,10 +187,14 @@ const startGame = async (req, res) => {
     game.status = 'in_progress';
     game.started = true;
     game.turn = game.players[0];
-    game.players.forEach(player => {
-      player.balance = 1500; // Inicializar saldo de cada jugador
-    });
+    for (const player of game.players) {
+      const playerObj = await Player.findById(player.toString());
+      playerObj.balance = 1500;
+      await playerObj.save();
+    }
+    
     await game.save();
+
     const io = req.app.get("io");
     // const io = req.app.get("io");
     io.to(game._id.toString()).emit('gameStarted', { game });
@@ -183,4 +222,4 @@ const nextTurn = async (req, res) => {
   }
 };
 
-module.exports = { createGame, joinGame, listGames, registerTurn, startGame, nextTurn, getGameById, getGameByCode };
+module.exports = { createGame, joinGame, listGames, registerTurn, startGame, nextTurn, getGameById, getGameByCode, leaveGame };
