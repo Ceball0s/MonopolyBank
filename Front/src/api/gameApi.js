@@ -201,3 +201,26 @@ export async function transferMoney({ fromId, toId, amount, code, token }) {
     throw error;
   }
 }
+
+
+// utils/api.js o donde prefieras
+export const getHistory = async ({ gameCode, token }) => {
+  try {
+    const response = await fetch(`http://localhost:5000/api/history/${gameCode}`, {
+      method: 'GET',
+      headers: {
+        'Authorization': `Bearer ${token}`
+      }
+    });
+
+    if (!response.ok) {
+      throw new Error('No se pudo obtener el historial');
+    }
+
+    const data = await response.json();
+    return data.history;
+  } catch (error) {
+    console.error('Error al obtener historial de transacciones:', error);
+    return [];
+  }
+};

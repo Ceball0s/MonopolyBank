@@ -80,7 +80,7 @@ const Banco = () => {
 
         <button
           className="w-full px-4 py-3 mt-4 font-semibold rounded-lg transition duration-200 bg-red-600 text-white hover:bg-red-700"
-          onClick={() => navigate("/historial",{ state: { bancoCode } })}
+          onClick={() => navigate("/historial",{ state: { bancoCode, token } })}
         >
           📜 Ver Historial
         </button>

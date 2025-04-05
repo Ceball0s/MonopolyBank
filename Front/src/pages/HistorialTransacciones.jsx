@@ -1,20 +1,39 @@
-import React from "react";
+import React, { useEffect, useState } from "react";
 import { useNavigate, useLocation } from "react-router-dom";
 import { useTheme } from "../Providers/ThemeProvider";
+import { getHistory } from "../api/gameApi"; // Asegúrate que esta ruta sea válida
 
 const HistorialTransacciones = () => {
   const navigate = useNavigate();
   const location = useLocation();
   const { theme } = useTheme();
 
-  const { bancoCode } = location.state || {}; // ← recibimos el código
+  const { bancoCode } = location.state || {}; // Código del juego
+  const [transacciones, setTransacciones] = useState([]);
+  const [loading, setLoading] = useState(true);
 
-  const transacciones = [
-    { id: 1, origen: "Jugador1", destino: "Jugador2", monto: 500, tipo: "Pago" },
-    { id: 2, origen: "Banco", destino: "Jugador3", monto: 1000, tipo: "Cobro" },
-    { id: 3, origen: "Jugador4", destino: "Jugador1", monto: 300, tipo: "Cobro" },
-    { id: 4, origen: "Jugador2", destino: "Banco", monto: 150, tipo: "Pago" },
-  ];
+  useEffect(() => {
+    const cargarHistorial = async () => {
+      const token = localStorage.getItem("token");
+      if (!bancoCode || !token) return;
+
+      setLoading(true);
+      const rawHistory = await getHistory({ gameCode: bancoCode, token });
+
+      const formatted = rawHistory.map((t, i) => ({
+        id: i + 1,
+        origen: t.from,
+        destino: t.to,
+        monto: t.amount,
+        tipo: t.type,
+      }));
+
+      setTransacciones(formatted);
+      setLoading(false);
+    };
+
+    cargarHistorial();
+  }, [bancoCode]);
 
   return (
     <div className="flex items-center justify-center min-h-screen">
@@ -28,32 +47,38 @@ const HistorialTransacciones = () => {
 
         {/* Tabla de historial */}
         <div className="w-full overflow-x-auto">
-          <table className="w-full text-left border-collapse">
-            <thead>
-              <tr className={`${theme === "dark" ? "bg-gray-700" : "bg-gray-200"} text-lg`}>
-                <th className="p-3">#</th>
-                <th className="p-3">Origen</th>
-                <th className="p-3">Destino</th>
-                <th className="p-3">Monto</th>
-                <th className="p-3">Tipo</th>
-              </tr>
-            </thead>
-            <tbody>
-              {transacciones.map((t, index) => (
-                <tr
-                  key={t.id}
-                  className={`border-t text-lg ${theme === "dark" ? "border-gray-600" : "border-gray-300"}
-                  ${index % 2 === 0 ? (theme === "dark" ? "bg-gray-700" : "bg-gray-100") : ""}`}
-                >
-                  <td className="p-3">{t.id}</td>
-                  <td className="p-3">{t.origen}</td>
-                  <td className="p-3">{t.destino}</td>
-                  <td className="p-3">${t.monto}</td>
-                  <td className="p-3">{t.tipo}</td>
+          {loading ? (
+            <p className="text-center w-full py-4 text-lg">Cargando transacciones...</p>
+          ) : transacciones.length === 0 ? (
+            <p className="text-center w-full py-4 text-lg">No hay transacciones registradas.</p>
+          ) : (
+            <table className="w-full text-left border-collapse">
+              <thead>
+                <tr className={`${theme === "dark" ? "bg-gray-700" : "bg-gray-200"} text-lg`}>
+                  <th className="p-3">#</th>
+                  <th className="p-3">Origen</th>
+                  <th className="p-3">Destino</th>
+                  <th className="p-3">Monto</th>
+                  <th className="p-3">Tipo</th>
                 </tr>
-              ))}
-            </tbody>
-          </table>
+              </thead>
+              <tbody>
+                {transacciones.map((t, index) => (
+                  <tr
+                    key={t.id}
+                    className={`border-t text-lg ${theme === "dark" ? "border-gray-600" : "border-gray-300"}
+                    ${index % 2 === 0 ? (theme === "dark" ? "bg-gray-700" : "bg-gray-100") : ""}`}
+                  >
+                    <td className="p-3">{t.id}</td>
+                    <td className="p-3">{t.origen}</td>
+                    <td className="p-3">{t.destino}</td>
+                    <td className="p-3">${t.monto}</td>
+                    <td className="p-3">{t.tipo}</td>
+                  </tr>
+                ))}
+              </tbody>
+            </table>
+          )}
         </div>
 
         {/* Botón de volver */}

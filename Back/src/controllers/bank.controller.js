@@ -2,62 +2,80 @@ const Player = require('../models/Player');
 const Transaction = require('../models/Transaction');
 const Game = require('../models/Game');
 
-const transferMoney = async (req, res) => {
-    try {
-        const { fromId, toId, amount, code } = req.body;
-        if (amount <= 0) return res.status(400).json({ error: 'Cantidad inválida' });
-
-        //const game = await Game.findById(gameId);
-        const game = await Game.findOne({ code, status: 'in_progress' });
-        if (!game) return res.status(404).json({ error: 'Juego no encontrado' });
-
-        let balancesRaw = game.players || []; // array de objetos con id, name y balance
-
-        const balances = Object.fromEntries(
-            balancesRaw.map((b, index) => [b.id.toString()])
-        );
-        
-        console.log(balancesRaw, balances);
-        // Validar fondos suficientes si el origen no es el banco
-        if (fromId !== "Banco") {
-            if (!(fromId in balances)) return res.status(404).json({ error: 'Jugador de origen no está en el juego' });
-            if (balances[fromId] < amount) return res.status(400).json({ error: 'Fondos insuficientes' });
-        }
-
-        // Validar si el jugador destino está en el juego (si no es banco)
-        if (toId !== "Banco" && !(toId in balances)) {
-            return res.status(404).json({ error: 'Jugador de destino no está en el juego' });
-        }
-
-        // No permitir transferirse a sí mismo
-        if (fromId === toId) return res.status(400).json({ error: 'No puedes transferir dinero a ti mismo' });
-
-        // Realizar transferencia dentro del estado del juego
-        if (fromId !== "Banco") balances[fromId] -= amount;
-        if (toId !== "Banco") {
-            balances[toId] = (balances[toId] || 0) + amount;
-        }
-
-        game.balances = balances;
-        await game.save();
-
-        // Guardar transacción
-        const transaction = new Transaction({
-            from: fromId === "Banco" ? null : fromId,
-            to: toId === "Banco" ? null : toId,
-            amount,
-            type: 'transfer',
-            game: gameId,
-        });
-        await transaction.save();
-
-        io.emit('moneyTransferred', { from: fromId, to: toId, amount, gameId });
-
-        res.json({ message: 'Transferencia realizada', transaction });
-    } catch (err) {
-        res.status(400).json({ error: err.message });
+const normalizeId = (id) => {
+    if (Buffer.isBuffer(id)) {
+      return id.toString('hex');
     }
+    return id.toString();
+  };
+  
+  const transferMoney = async (req, res) => {
+    const { fromId, toId, amount, code } = req.body;
+  const authenticatedUser = req.user;
+
+  try {
+    // Validar datos
+    if (!fromId || !toId || !amount || !code) {
+      return res.status(400).json({ message: 'Faltan datos requeridos' });
+    }
+
+    // Verificar que el usuario autenticado sea quien envía
+    if (req.player.id !== String(fromId)) {
+      return res.status(403).json({ message: 'No puedes enviar dinero en nombre de otro jugador' });
+    }
+
+    // Buscar el juego
+    const game = await Game.findOne({ code });
+    if (!game) return res.status(404).json({ message: 'Juego no encontrado' });
+
+    // Verificar que ambos jugadores estén en el juego
+    const playerIds = game.players.map(id => String(id));
+    if (!playerIds.includes(fromId) || !playerIds.includes(toId)) {
+      return res.status(403).json({ message: 'Ambos jugadores deben estar en el juego' });
+    }
+
+    // Verificar que sea el turno del jugador
+    if (String(game.turn) !== String(fromId)) {
+      return res.status(403).json({ message: 'No es tu turno' });
+    }
+
+    // Obtener ambos jugadores
+    const fromPlayer = await Player.findById(fromId);
+    const toPlayer = await Player.findById(toId);
+    if (!fromPlayer || !toPlayer) {
+      return res.status(404).json({ message: 'Jugador no encontrado' });
+    }
+
+    // Verificar saldo
+    if (fromPlayer.balance < amount) {
+      return res.status(400).json({ message: 'Saldo insuficiente' });
+    }
+
+    // Realizar transacción
+    fromPlayer.balance -= amount;
+    toPlayer.balance += amount;
+
+    await fromPlayer.save();
+    await toPlayer.save();
+
+    const transaction = new Transaction({
+      from: fromPlayer._id,
+      to: toPlayer._id,
+      amount,
+      gameId: game._id
+    });
+
+    await transaction.save();
+
+    res.status(201).json({ message: 'Transacción realizada', transaction });
+  } catch (error) {
+    console.error(error);
+    res.status(500).json({ message: 'Error en el servidor' });
+  }
 };
+  
+
+
 
 
 const getTransactionHistory = async (req, res) => {

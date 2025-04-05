@@ -67,7 +67,7 @@ const Transacciones = () => {
           {jugadores.map((jugador) => (
             <option key={jugador.id} value={jugador.id}>{jugador.name}</option>
           ))}
-          <option value="Banco">Banco</option>
+          {/* <option value="Banco">Banco</option> */}
         </select>
 
         <select
@@ -82,7 +82,7 @@ const Transacciones = () => {
             .map((jugador) => (
               <option key={jugador.id} value={jugador.id}>{jugador.name}</option>
             ))}
-          <option value="Banco">Banco</option>
+          {/* <option value="Banco">Banco</option> */}
         </select>
 
         <input
