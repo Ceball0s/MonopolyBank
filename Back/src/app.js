@@ -47,4 +47,6 @@ io.on('connection', (socket) => {
     });
 });
 
+app.set("io", io);
+
 module.exports = { app, server, io };

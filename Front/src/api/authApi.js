@@ -17,18 +17,19 @@ export const loginRequest = async (email, password) => {
 };
 
 export const registerRequest = async (name, email, password) => {
-    const response = await fetch(`${API_URL}/api/auth/register`, {
-      method: "POST",
-      headers: {
-        "Content-Type": "application/json",
-      },
-      body: JSON.stringify({ name, email, password }),
-    });
-  
-    if (!response.ok) {
-      const errorData = await response.json();
-      throw new Error(errorData.error || "Error en el registro");
-    }
-  
-    return response.json();
-  };
+  const response = await fetch(`${API_URL}/api/auth/register`, {
+    method: "POST",
+    headers: {
+      "Content-Type": "application/json",
+    },
+    body: JSON.stringify({ name, email, password }),
+  });
+
+  if (!response.ok) {
+    const errorData = await response.json();
+    throw new Error(errorData.error || "Error en el registro");
+  }
+
+  return response.json();
+};
+

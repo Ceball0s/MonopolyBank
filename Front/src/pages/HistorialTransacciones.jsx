@@ -1,10 +1,13 @@
 import React from "react";
-import { useNavigate } from "react-router-dom";
+import { useNavigate, useLocation } from "react-router-dom";
 import { useTheme } from "../Providers/ThemeProvider";
 
 const HistorialTransacciones = () => {
   const navigate = useNavigate();
+  const location = useLocation();
   const { theme } = useTheme();
+
+  const { bancoCode } = location.state || {}; // ← recibimos el código
 
   const transacciones = [
     { id: 1, origen: "Jugador1", destino: "Jugador2", monto: 500, tipo: "Pago" },
@@ -55,7 +58,7 @@ const HistorialTransacciones = () => {
 
         {/* Botón de volver */}
         <button
-          onClick={() => navigate("/banco")}
+          onClick={() => navigate(`/banco/${bancoCode}`)}
           className="w-full px-4 py-3 font-semibold text-white bg-red-600 rounded-lg hover:bg-red-700 transition duration-200"
         >
           🔙 Volver

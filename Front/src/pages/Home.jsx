@@ -1,32 +1,39 @@
-import React, { useState,useContext } from "react";
+import React, { useState, useContext } from "react";
 import { useNavigate } from "react-router-dom";
 import { FaDice, FaUsers, FaSignOutAlt } from "react-icons/fa";
 import EntradaTexto from "../components/EntradaTexto";
 import { useTheme } from "../Providers/ThemeProvider";
 import { AuthContext } from "../context/AuthContext";
-
+import { joinGame } from "../api/gameApi";
 
 const Home = () => {
-  const { logout } = useContext(AuthContext);
+  const { logout, user } = useContext(AuthContext);
   const navigate = useNavigate();
   const { theme } = useTheme();
   const [codigoSala, setCodigoSala] = useState("");
 
-  const generarCodigoSala = () => {
-    return Math.random().toString(36).substr(2, 6).toUpperCase(); // Genera un código aleatorio
-  };
-
   const handleCrearSala = () => {
-    const nuevoCodigo = generarCodigoSala();
-    localStorage.setItem("admin", nuevoCodigo); // Guarda quién es el admin
-    navigate(`/sala/${nuevoCodigo}`);
+    localStorage.setItem("admin", "true");
+    navigate("/crear-sala");
   };
 
-  const handleUnirseSala = () => {
+  const handleUnirseSala = async () => {
     if (codigoSala.trim() === "") {
       alert("Por favor, ingrese un código de sala válido.");
-    } else {
-      navigate(`/sala/${codigoSala}`); // Unirse a la sala
+      return;
+    }
+
+    try {
+      const token = localStorage.getItem("token");
+      const response = await joinGame(token, codigoSala.trim());
+      const currentPlayerId = localStorage.getItem("playerId");
+      const soyAdmin = response.game.admin === currentPlayerId;
+
+      localStorage.setItem("admin", soyAdmin ? "true" : "false");
+      alert("¡Unido a la sala exitosamente!");
+      navigate(`/sala/${response.game.code}`);
+    } catch (error) {
+      alert(error.message || "Error al unirse a la sala");
     }
   };
 
@@ -37,17 +44,24 @@ const Home = () => {
 
   return (
     <div className="flex items-center justify-center min-h-screen">
-      <div 
+      <div
         className={`w-full max-w-md p-8 shadow-2xl rounded-lg bg-opacity-95
         ${theme === "dark" ? "bg-gray-800 text-white" : "bg-white text-gray-900"}
         flex flex-col items-center h-auto min-h-[400px]`}
       >
+        
+
         <h1 className="text-4xl font-bold text-center mb-6 w-full">🎲 Monopoly Bank</h1>
 
-        {/* Botón para crear sala */}
+        {/* 👤 Mostrar nombre del usuario */}
+        {user && (
+          <p className="text-xl font-medium text-center mb-2">
+            Bienvenido, {user.name}
+          </p>
+        )}
         <button
           className="w-full flex items-center justify-center gap-3 px-4 py-3 font-semibold text-white bg-blue-600 rounded-lg hover:bg-blue-700 transition duration-200"
-          onClick={handleCrearSala} // Crear sala con código único
+          onClick={handleCrearSala}
         >
           <FaDice className="text-xl" /> Crear Sala
         </button>
@@ -61,7 +75,6 @@ const Home = () => {
             className="w-full"
           />
 
-          {/* Botón para unirse a una sala */}
           <button
             className="w-full flex items-center justify-center gap-3 px-4 py-3 font-semibold text-white bg-green-600 rounded-lg hover:bg-green-700 transition duration-200"
             onClick={handleUnirseSala}
@@ -69,7 +82,6 @@ const Home = () => {
             <FaUsers className="text-xl" /> Unirse a una Sala
           </button>
 
-          {/* Botón para cerrar sesión */}
           <button
             className="w-full flex items-center justify-center gap-3 px-4 py-3 font-semibold text-white bg-red-600 rounded-lg hover:bg-yellow-700 transition duration-200"
             onClick={handleLogout}
